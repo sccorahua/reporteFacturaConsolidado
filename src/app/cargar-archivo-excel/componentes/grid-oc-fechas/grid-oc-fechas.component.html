@@ -1,0 +1,149 @@
+<div class="container">
+    <div class="col-12">
+        <div class="row">
+
+            <div class="col-12 mt-5">
+                <p class="text-primary h4">Reporte de O/C Pendiente Pago</p>
+            </div>
+
+            <div class="col-12 mb-5 mt-5">
+                <div>
+                    <p class="text-secondary h5"> Filtros </p>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="label-filtro">Supervisor</label>
+                        <select [formControl]="filtroSupervisor" class="filtro-input" style="width: 80%;">
+                            <option value="null" disabled selected>Seleccionar uno</option>
+                            <option [value]="null"> Todos </option>
+                            <option *ngFor="let item of listaSupervisor" [value]="item">
+                                {{ item }} </option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="label-filtro">Fecha Inicio Servicio</label>
+                        <input [formControl]="filtroFechaInicio" class="filtro-input" type="date" style="width: 80%;"/>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="label-filtro">Fecha Fin Servicio</label>
+                        <input [formControl]="filtroFechaFin" class="filtro-input" type="date" style="width: 80%;"/>
+                    </div>
+                    <div class="col-md-3 d-flex justify-content-end">
+                        <div>
+                            <button class="btn btn-outline-danger px-4 py-2 rounded-3 shadow-sm"
+                                (click)="filtrarReporte()"> Buscar </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 mb-5">
+                <p class="text-secondary h5 mb-3">Resultados</p>
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="card text-center shadow-sm border-success">
+                            <div class="card-body">
+                                <h5 class="card-title text-success">
+                                    {{ montoConIGV | currency:'S/.':'symbol':'1.2-2' }}
+                                </h5>
+                                <p class="card-text">Monto con IGV</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center shadow-sm border-info">
+                            <div class="card-body">
+                                <h5 class="card-title text-info">
+                                    {{ montoSinIGV | currency:'S/.':'symbol':'1.2-2' }}
+                                </h5>
+                                <p class="card-text">Monto sin IGV</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="card text-center shadow-sm border-primary">
+                            <div class="card-body">
+                                <h5 class="card-title text-primary">{{ cantidadRegistros }}</h5>
+                                <p class="card-text">Cantidad de registros</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-12">
+                <div>
+                    <p class="text-secondary h5"> Registros </p>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col" style="text-align: center; width: 100px;">Supervisor
+                            </th>
+                            <th scope="col" style="text-align: left; width: 400px;">Servicio
+                            </th>
+                            <th scope="col" style="text-align: center; width: 100px;">F. Envio Ppto
+                            </th>
+                            <th scope="col" style="text-align: center; width: 50px;">F. Servicio
+                            </th>
+                            <th scope="col" style="text-align: center; width: 80px;">Monto</th>
+                            <th scope="col" style="text-align: center; width: 50px;">Acciones
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let fila of reporteConsolidadoFechaGrid" (click)="verDetalles(fila)">
+                            <td class="text-center" style="width: 100px;">{{ fila.Supervisor }}</td>
+                            <td scope="row" class="text-left" style="width: 400px;">{{ fila.Descripcion }}</td>
+                            <td class="text-center" style="width: 100px;">{{ fila.FecEnvioPresupuesto | date:'dd-MM-yyyy' }}</td>
+                            <td class="text-center" style="width: 50px;">{{ fila.FecServicio | date:'dd-MM-yyyy' }}
+                            </td>
+                            <td class="text-center" style="width: 80px;">{{ fila.MontoIGV |
+                                currency:'S/.':'symbol-narrow' }}</td>
+                            <td class="text-center" style="width: 50px;">
+                                <button (click)="verDetalles(fila)" style="border: none; background: none;">
+                                    <i class="bi bi-eye-fill text-primary"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<ng-template #modalDetalles let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="modalDetallesLabel">Detalles del Registro</h5>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="detalleFila">
+            <p><strong>Fecha de Envio de Presupuesto:</strong> {{ detalleFila.FecEnvioPresupuesto | date:'dd-MM-yyyy' }}
+            </p>
+            <p><strong>Fecha de Servicio:</strong> {{ detalleFila.FecServicio | date:'dd-MM-yyyy' }}</p>
+            <p><strong>Ticket de Aranda:</strong> {{ detalleFila.TicketAranda }}</p>
+            <p><strong>Ticket Cerrado:</strong> {{ detalleFila.TicketCerrado ? 'Sí' : 'No' }}</p>
+            <p><strong>Días de Retraso:</strong> {{ detalleFila.DiasRetraso }}</p>
+            <p><strong>Razón Social:</strong> {{ detalleFila.RazonSocial }}</p>
+            <p><strong>Orden de Compra:</strong> {{ detalleFila.OrdenCompra }}</p>
+            <p><strong>Factura:</strong> {{ detalleFila.Factura }}</p>
+            <p><strong>Centro de Costo:</strong> {{ detalleFila.CentroCosto }}</p>
+            <p><strong>Local:</strong> {{ detalleFila.Local }}</p>
+            <p><strong>Descripción:</strong> {{ detalleFila.Descripcion }}</p>
+            <p><strong>Horas Alquiladas:</strong> {{ detalleFila.HorasAlquiladas }}</p>
+            <p><strong>Supervisor:</strong> {{ detalleFila.Supervisor }}</p>
+            <p><strong>Ciudad:</strong> {{ detalleFila.Ciudad }}</p>
+            <p><strong>Monto sin IGV:</strong> {{ detalleFila.Monto | currency:'S/.':'symbol-narrow' }}</p>
+            <p><strong>Monto con IGV:</strong> {{ detalleFila.MontoIGV | currency:'S/.':'symbol-narrow' }}</p>
+            <p><strong>Estado de O/C:</strong> {{ detalleFila.EstadoOrdenCompra }}</p>
+            <p><strong>Medio de Pago:</strong> {{ detalleFila.MedioPago }}</p>
+            <p><strong>Técnico(s) Asignado:</strong> {{ detalleFila.TenicoAsignado }}</p>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-primary" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
