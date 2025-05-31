@@ -1,0 +1,34 @@
+.pagination .page-item.active .page-link {
+  background-color: #198754;
+  border-color: #198754;   
+  color: #fff;             
+}
+
+.pagination .page-item .page-link:hover {
+  background-color: #157347;
+  border-color: #157347;
+  color: #fff;
+}
+
+.pagination .page-item .page-link {
+  color: #198754; /* Bootstrap success color para los enlaces inactivos */
+  text-decoration: none; /* Opcional: quitar el subrayado predeterminado de los enlaces */
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #198754;
+  border-color: #198754;
+  color: #fff;
+}
+
+.pagination .page-item .page-link:hover {
+  background-color: #157347;
+  border-color: #157347;
+  color: #fff;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #6c757d; /* Color gris para los enlaces deshabilitados */
+  background-color: #fff; /* Mantener el fondo blanco para deshabilitados */
+  border-color: #dee2e6;
+}

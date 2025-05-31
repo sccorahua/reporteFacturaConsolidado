@@ -6,18 +6,20 @@ import { GridOcFacturadoComponent } from './componentes/grid-oc-facturado/grid-o
 import { GridOcPendienteComponent } from './componentes/grid-oc-pendiente/grid-oc-pendiente.component';
 import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { GridOcFechasComponent } from './componentes/grid-oc-fechas/grid-oc-fechas.component';
+import { GraphEstadisticasComponent } from './componentes/graph-estadisticas/graph-estadisticas.component';
+import { VentaPorCiudad } from '../models/ventas-ubicacion';
+import { ExcelDataService } from '../service/excel-data.service';
+import { HeaderComponent } from '../header/header.component';
 
 @Component({
   selector: 'app-cargar-archivo-excel',
   templateUrl: './cargar-archivo-excel.component.html',
   standalone: true,
   imports: [
+    HeaderComponent,
     DatePipe,
     JsonPipe,
     CommonModule,
-    GridOcFacturadoComponent,
-    GridOcPendienteComponent,
-    GridOcFechasComponent,
     NgbModalModule,
   ],
   styleUrl: './cargar-archivo-excel.component.css'
@@ -37,23 +39,19 @@ export class CargarArchivoExcelComponent {
   reporteConsolidadoDeuda: FilaConsolidado[] = [];
   reporteConsolidadoFecha: FilaConsolidado[] = [];
 
+  ventasCiudades: VentaPorCiudad[] = [];
+
   reporteConsolidadoPagadoVer: boolean = false;
   reporteConsolidadoDeudaVer: boolean = false;
   reporteConsolidadoFechaVer: boolean = false;
+  graficaEstadisticasVer: boolean = false;
 
   excelData: any[] = [];
 
   constructor(
     private modalService: NgbModal,
+    private excelDataService: ExcelDataService,
   ) { }
-
-  botones = [
-    { titulo: 'O/C Pagados', accion: () => this.ocPagados() },
-    { titulo: 'O/C con Deudas', accion: () => this.ocDeudas() },
-    { titulo: 'Por fechas Monto Facturado', accion: () => this.montoFacturado() },
-    { titulo: 'Tipo de Servicio', accion: () => this.tipoServicio() },
-    { titulo: 'Nombre Técnico', accion:  () => this.nombreTecnico() },
-  ];
 
   onFileChange(event: Event): void {
     const target = event.target as HTMLInputElement;
@@ -75,11 +73,19 @@ export class CargarArchivoExcelComponent {
   procesarExcel() {
     this.limpiarRegistros();
     let fila!: FilaConsolidado;
+    const procesarExcelData : FilaConsolidado[] = []; // Array temporal
+
+
 
     this.excelData.forEach(item => {
       const fechaEnvio = item['F_ENVIO_PSTO'];
+      const descripcionServicio = item['DESCRIPCION_DEL_SERVICIO'];
 
       if (fechaEnvio === null || fechaEnvio === undefined || fechaEnvio === '') {
+        return;
+      }
+
+      if (descripcionServicio === null || descripcionServicio === undefined || descripcionServicio === '') {
         return;
       }
 
@@ -94,7 +100,7 @@ export class CargarArchivoExcelComponent {
         Factura: item['FACTURA'],
         CentroCosto: item['CENTRO_DE_COSTO'],
         Local: item['LOCAL'],
-        Descripcion: item['DESCRIPCION_DEL_SERVICIO'],
+        Descripcion: descripcionServicio, //item['DESCRIPCION_DEL_SERVICIO'],
         HorasAlquiladas: item['HORAS_ALQUILADAS'],
         Supervisor: item['SUPERVISOR'],
         Ciudad: item['CIUDAD'],
@@ -102,39 +108,18 @@ export class CargarArchivoExcelComponent {
         MontoIGV: item['MONTO_INC_IGV'],
         EstadoOrdenCompra: item['ESTADO_O/C'],
         MedioPago: item['MEDIO_DE_PAGO'],
-        TenicoAsignado: item['TECNICOS_A_CARGO']
+        TenicoAsignado: item['TECNICOS_A_CARGO'] === undefined?("No asignado"):(item['TECNICOS_A_CARGO'])
       };
 
-      this.reporteConsolidado.push(fila);
-    })
+      procesarExcelData.push(fila);
+    });
+
+    this.reporteConsolidado = procesarExcelData;
+    this.excelDataService.setExcelData(this.reporteConsolidado);
+
     this.archivoCargado = true;
     this.abrirModal();
-    console.log(this.reporteConsolidado);
-
-  }
-
-  ocPagados() {   
-    this.reporteConsolidadoPagado = this.reporteConsolidado.filter(item => item.EstadoOrdenCompra === 'FACTURADO');
-    this.reporteConsolidadoPagadoVer = true;
-
-  }
-
-  ocDeudas() {
-    this.reporteConsolidadoDeuda = this.reporteConsolidado.filter(item => item.EstadoOrdenCompra === 'PENDIENTE');
-    this.reporteConsolidadoDeudaVer = true;
-  }
-
-  montoFacturado() {
-    this.reporteConsolidadoFecha = this.reporteConsolidado;
-    this.reporteConsolidadoFechaVer = true;
-  }
-
-  tipoServicio() {
-    console.log('Tipo de Servicio');
-  }
-
-  nombreTecnico() {
-    console.log('Nombre Técnico');
+    console.log(this.reporteConsolidado);    
   }
 
   limpiarRegistros() {
@@ -143,24 +128,15 @@ export class CargarArchivoExcelComponent {
 
   abrirModal() {
     const modalRef = this.modalService.open(this.modalConfirmacion);
+    let a = this.excelDataService.getExcelDataPorEstadoOC();
+    console.log("DATOS ESTADO OC");
+    console.log(a);
     setTimeout(() => modalRef.close(), 3000);
   }
 
   excelDateToJSDate(serial: number): Date {
-    const utc_days = Math.floor(serial - 25569);  
-    const utc_value = utc_days * 86400; 
+    const utc_days = Math.floor(serial - 25569);
+    const utc_value = utc_days * 86400;
     return new Date(utc_value * 1000);
-  }
-
-  retroceder() {
-    this.archivoCargado = false;
-    this.excelData = [];
-    this.reporteConsolidado = [];
-  }
-
-  menuReportes(){
-    this.reporteConsolidadoPagadoVer = false;
-    this.reporteConsolidadoDeudaVer = false;
-    this.reporteConsolidadoFechaVer = false;
   }
 }

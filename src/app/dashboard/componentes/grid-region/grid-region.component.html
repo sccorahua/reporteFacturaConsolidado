@@ -1,0 +1,57 @@
+<div class="table-container">
+    <ng-container *ngIf="paginatedData && paginatedData.length > 0; else noData">
+        <table class="table table-striped table-bordered data-table">
+            <thead>
+                <tr>
+                    <th style="font-size: 14px;">Ctd</th>
+                    <th style="font-size: 14px;">Ciudad</th>
+                    <th style="font-size: 14px;">Monto IGV</th>
+                    <th style="font-size: 14px;">Monto inc. IGV</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let row of paginatedData">
+                    <td style="font-size: 14px;"> <small> {{ row.CantidadRegistro }} </small> </td>
+                    <td style="font-size: 14px;"> <small> {{ row.Ciudad }} </small> </td>
+                    <td style="font-size: 14px;"> <small> {{ row.MontoSinIGv | currency:'S/.':'symbol':'1.2-2' }} </small> </td>
+                    <td style="font-size: 14px;"> <small> {{ row.MontoConIGV | currency:'S/.':'symbol':'1.2-2' }} </small> </td>
+                </tr>
+            </tbody>
+            <!--
+      <tfoot>
+        <tr class="table-info"> <td><strong>Total Global</strong></td>
+          <td><strong>{{ getTotalCantidadRegistro() }}</strong></td>
+          <td><strong>{{ getTotalMontoSinIGV() | currency:'PEN':'symbol':'1.2-2' }}</strong></td>
+          <td><strong>{{ getTotalMontoConIGV() | currency:'PEN':'symbol':'1.2-2' }}</strong></td>
+        </tr>
+      </tfoot>
+      -->
+        </table>
+
+        <nav aria-label="Page navigation" class="d-flex justify-content-center align-items-center mt-4">
+            <ul class="pagination mb-0">
+                <li class="page-item" [class.disabled]="currentPage === 1">
+                    <a class="page-link" (click)="prevPage()" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                <ng-container *ngFor="let pageNum of [].constructor(totalPages); let i = index">
+                    <li class="page-item" [class.active]="currentPage === (i + 1)">
+                        <a class="page-link" (click)="goToPage(i + 1)">{{ i + 1 }}</a>
+                    </li>
+                </ng-container>
+
+                <li class="page-item" [class.disabled]="currentPage === totalPages">
+                    <a class="page-link" (click)="nextPage()" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </ng-container>
+
+    <ng-template #noData>
+        <p>No hay datos disponibles para mostrar por ciudad.</p>
+    </ng-template>
+</div>

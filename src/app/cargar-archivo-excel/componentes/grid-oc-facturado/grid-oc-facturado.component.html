@@ -1,15 +1,8 @@
 <div class="container">
     <div class="col-12">
         <div class="row">
-            <div class="col-md-12">
-                <div class="pt-4">
-                    <button class="btn btn-link text-danger px-4 py-2 rounded-3 shadow-sm" (click)="retroceder()">
-                        <i class="bi bi-arrow-repeat me-2"></i> Retroceder
-                    </button>
-                </div>
-            </div>
             <div class="col-12 mt-5">
-                <p class="text-primary h4">Reporte de O/C Facturado</p>
+                <p class="text-success h4">Reporte de O/C Facturado</p>
             </div>
 
             <div class="col-12 mb-5 mt-5">
@@ -26,23 +19,23 @@
                                 {{ item }} </option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label class="label-filtro">Centro de Costos</label>
-                        <select [formControl]="filtroCentroCosto" class="filtro-input" style="width: 80%;">
-                            <option value="null" disabled selected>Seleccionar uno</option>
-                            <option [value]="null"> Todos </option>
-                            <option *ngFor="let item of listaCentroCosto" [value]="item">
-                                {{ item }} </option>
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="label-filtro">Tipo Servicio</label>
-                        <select [formControl]="filtroDescripcionServicio" class="filtro-input" style="width: 80%;">
-                            <option value="null" disabled selected>Seleccionar uno</option>
-                            <option [value]="null"> Todos </option>
-                            <option *ngFor="let item of listaDescripcionServicio" [value]="item">
-                                {{ item }} </option>
-                        </select>
+                    <div class="col-md-6" style="margin-left: 0; padding-left: 0;">
+                        <label class="form-label">Tipo Servicio</label>
+
+                        <ng-select class="ng-filtro-input" [formControl]="filtroDescripcionServicio"
+                            [items]="listaDescripcionServicio" [multiple]="true" bindLabel="this"
+                            [selectableGroup]="true" [selectableGroupAsModel]="false" [closeOnSelect]="false"
+                            bindValue="this">
+                            <ng-template ng-optgroup-tmp let-item="item" let-item$="item$" let-index="index">
+                                <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" disabled /> {{
+                                item }}
+                            </ng-template>
+
+                            <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                                <input id="item-{{ index }}" type="checkbox" [checked]="item$.selected" disabled /> {{
+                                item }}
+                            </ng-template>
+                        </ng-select>
                     </div>
                     <div class="col-md-3 d-flex justify-content-end">
                         <div>
@@ -50,6 +43,10 @@
                                 (click)="filtrarReporte()"> Buscar </button>
                         </div>
                     </div>
+                </div>
+                <div class="col-md-3">
+                    <input type="checkbox" (click)="seleccionarTodosServicios($event)" /> Seleccionar
+                    todos los servicios
                 </div>
             </div>
 
@@ -87,10 +84,13 @@
                 </div>
             </div>
 
-
             <div class="col-12">
                 <div>
                     <p class="text-secondary h5"> Registros </p>
+                </div>
+                <div class="col-md-12 mb-2 mt-2">
+                    <input type="text" class="filtro-input-busqueda" style="width: 100%;" [(ngModel)]="textoBusqueda"
+                        placeholder="Buscar en la tabla...">
                 </div>
                 <table class="table">
                     <thead>
@@ -109,7 +109,8 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let fila of reporteConsolidadoPagadoGrid">
+                        <tr
+                            *ngFor="let fila of reporteConsolidadoPagadoGrid | tablaFiltroFacturado: textoBusqueda: ['TicketAranda']">
                             <td class="text-center" style="width: 50px;">{{ fila.Factura }}</td>
                             <td scope="row" class="text-left" style="width: 400px;">{{ fila.Descripcion }}</td>
                             <td class="text-center" style="width: 50px;">{{ fila.FecServicio | date:'dd-MM-yyyy' }}
@@ -131,6 +132,7 @@
 </div>
 
 <!-- Modal -->
+ <!--
 <ng-template #modalDetalles let-modal>
     <div class="modal-header">
         <h5 class="modal-title" id="modalDetallesLabel">Detalles del Registro</h5>
@@ -161,5 +163,117 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-primary" (click)="modal.dismiss()">Cerrar</button>
+    </div>
+</ng-template>
+-->
+<ng-template #modalDetalles let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title" id="modalDetallesLabel">Detalles del Registro</h5>
+    </div>
+    <div class="modal-body">
+        <div *ngIf="detalleFilaParaEdicion">
+            <div class="mb-3">
+                <label for="fecEnvioPresupuesto" class="form-label">Fecha de Envio de Presupuesto:</label>
+                <input type="date" class="form-control" id="fecEnvioPresupuesto"
+                       [(ngModel)]="detalleFilaParaEdicion.FecEnvioPresupuesto">
+            </div>
+            <div class="mb-3">
+                <label for="fecServicio" class="form-label">Fecha de Servicio:</label>
+                <input type="date" class="form-control" id="fecServicio"
+                       [(ngModel)]="detalleFilaParaEdicion.FecServicio">
+            </div>
+            <div class="mb-3">
+                <label for="ticketAranda" class="form-label">Ticket de Aranda:</label>
+                <input type="text" class="form-control" id="ticketAranda"
+                       [(ngModel)]="detalleFilaParaEdicion.TicketAranda">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ticket Cerrado:</label>
+                <div class="form-check">
+                    <input type="checkbox" class="form-check-input" id="ticketCerrado"
+                           [(ngModel)]="detalleFilaParaEdicion.TicketCerrado">
+                    <label class="form-check-label" for="ticketCerrado">{{ detalleFila.TicketCerrado ? 'Sí' : 'No' }}</label>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="diasRetraso" class="form-label">Días de Retraso:</label>
+                <input type="number" class="form-control" id="diasRetraso"
+                       [(ngModel)]="detalleFilaParaEdicion.DiasRetraso">
+            </div>
+            <div class="mb-3">
+                <label for="razonSocial" class="form-label">Razón Social:</label>
+                <input type="text" class="form-control" id="razonSocial"
+                       [(ngModel)]="detalleFilaParaEdicion.RazonSocial">
+            </div>
+            <div class="mb-3">
+                <label for="ordenCompra" class="form-label">Orden de Compra:</label>
+                <input type="text" class="form-control" id="ordenCompra"
+                       [(ngModel)]="detalleFilaParaEdicion.OrdenCompra">
+            </div>
+            <div class="mb-3">
+                <label for="factura" class="form-label">Factura:</label>
+                <input type="text" class="form-control" id="factura"
+                       [(ngModel)]="detalleFilaParaEdicion.Factura">
+            </div>
+            <div class="mb-3">
+                <label for="centroCosto" class="form-label">Centro de Costo:</label>
+                <input type="text" class="form-control" id="centroCosto"
+                       [(ngModel)]="detalleFilaParaEdicion.CentroCosto">
+            </div>
+            <div class="mb-3">
+                <label for="local" class="form-label">Local:</label>
+                <input type="text" class="form-control" id="local"
+                       [(ngModel)]="detalleFilaParaEdicion.Local">
+            </div>
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción:</label>
+                <textarea class="form-control" id="descripcion" rows="3"
+                          [(ngModel)]="detalleFilaParaEdicion.Descripcion"></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="horasAlquiladas" class="form-label">Horas Alquiladas:</label>
+                <input type="number" class="form-control" id="horasAlquiladas"
+                       [(ngModel)]="detalleFilaParaEdicion.HorasAlquiladas">
+            </div>
+            <div class="mb-3">
+                <label for="supervisor" class="form-label">Supervisor:</label>
+                <input type="text" class="form-control" id="supervisor"
+                       [(ngModel)]="detalleFilaParaEdicion.Supervisor">
+            </div>
+            <div class="mb-3">
+                <label for="ciudad" class="form-label">Ciudad:</label>
+                <input type="text" class="form-control" id="ciudad"
+                       [(ngModel)]="detalleFilaParaEdicion.Ciudad">
+            </div>
+            <div class="mb-3">
+                <label for="montoSinIGV" class="form-label">Monto sin IGV:</label>
+                <input type="number" class="form-control" id="montoSinIGV"
+                       [(ngModel)]="detalleFilaParaEdicion.Monto">
+            </div>
+            <div class="mb-3">
+                <label for="montoConIGV" class="form-label">Monto con IGV:</label>
+                <input type="number" class="form-control" id="montoConIGV"
+                       [(ngModel)]="detalleFilaParaEdicion.MontoIGV">
+            </div>
+            <div class="mb-3">
+                <label for="estadoOrdenCompra" class="form-label">Estado de O/C:</label>
+                <input type="text" class="form-control" id="estadoOrdenCompra"
+                       [(ngModel)]="detalleFilaParaEdicion.EstadoOrdenCompra">
+            </div>
+            <div class="mb-3">
+                <label for="medioPago" class="form-label">Medio de Pago:</label>
+                <input type="text" class="form-control" id="medioPago"
+                       [(ngModel)]="detalleFilaParaEdicion.MedioPago">
+            </div>
+            <div class="mb-3">
+                <label for="tenicoAsignado" class="form-label">Técnico(s) Asignado:</label>
+                <input type="text" class="form-control" id="tenicoAsignado"
+                       [(ngModel)]="detalleFilaParaEdicion.TenicoAsignado">
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Cerrar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarCambios()">Guardar Cambios</button>
     </div>
 </ng-template>

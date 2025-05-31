@@ -1,0 +1,82 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-8 col-md-12 mb-4 mt-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Mapa de Ventas por Ubicación</h6>
+                </div>
+                <div class="card-body">
+                    <div id="mapaVentas" style="width: 100%; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-12 mb-4 mt-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">OC Facturadas por Región</h6>
+                </div>
+                <div class="card-body">
+                    <app-grid-region></app-grid-region>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Ventas Mensuales</h6>
+                </div>
+                <div class="card-body">
+                    <app-ventas-mensuales-chart></app-ventas-mensuales-chart>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Estados de Orden de Compra</h6>
+                </div>
+                <div class="card-body">
+                    <app-estados-oc-chart></app-estados-oc-chart>
+                </div>
+            </div>
+        </div>
+        <div class="col-4 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Ventas por Descripcion de Servicio</h6>
+                </div>
+                <div class="card-body">
+                    <app-ventas-por-servicio-chart></app-ventas-por-servicio-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Ventas por Supervisor Asignado</h6>
+                </div>
+                <div class="card-body">
+                    <app-ventas-por-supervisor-chart></app-ventas-por-supervisor-chart>
+                </div>
+            </div>
+        </div>
+        <div class="col-6 mb-4">
+            <div class="card shadow h-100">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold text-success">Ventas por Técnico Asignado</h6>
+                </div>
+                <div class="card-body">
+                    <app-ventas-por-tecnico-chart></app-ventas-por-tecnico-chart>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

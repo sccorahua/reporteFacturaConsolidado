@@ -1,0 +1,56 @@
+<header>
+    <nav class="navbar navbar-expand-md navbar-white bg-white shadow-sm">
+        <div class="container-fluid">
+            <span class="navbar-brand">
+                <a routerLink="/" style="text-decoration: none;">
+                    <div class="mb-0 h5 text-black fw-semibold">Buenas días</div>
+                    <div class="mb-0 h4 text-success fw-semibold">{{ nombreUsuario }}</div>
+                </a>
+            </span>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold text-dark custom-hover" routerLink="/cargar-excel">Cargar Excel</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-bold text-dark custom-hover" id="navbarDropdownReportes"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Ver Reportes
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownReportes">
+                            <li><a class="dropdown-item custom-hover fw-semibold" style="cursor: pointer;"
+                                    routerLink="/reportes/facturado">
+                                    Facturado
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item custom-hover fw-semibold" style="cursor: pointer;"
+                                    routerLink="/reportes/pendiente">
+                                    Pendiente
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle fw-bold text-dark custom-hover" id="navbarDropdownDashboard"
+                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Ver Dashboards
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdownDashboard">
+                            <li>
+                                <a class="dropdown-item custom-hover fw-semibold" style="cursor: pointer;"
+                                    routerLink="/dashboard/facturado">
+                                    General
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

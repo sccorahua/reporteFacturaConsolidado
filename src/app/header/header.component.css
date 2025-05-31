@@ -1,0 +1,16 @@
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+.custom-hover:hover {
+    color: var(--bs-success) !important;
+}
+
+#navbarDropdownDashboard + .dropdown-menu {
+    left: 0 !important;
+    right: auto !important;
+}

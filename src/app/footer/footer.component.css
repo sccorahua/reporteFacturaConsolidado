@@ -1,0 +1,20 @@
+footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+.text-muted {
+    color: #6c757d !important;
+    /* Asegura que el color del texto sea consistente */
+    text-decoration: none;
+    /* Elimina el subrayado predeterminado de los enlaces */
+}
+
+.text-muted:hover {
+    color: #495057 !important;
+    /* Oscurece el color al pasar el mouse */
+    text-decoration: underline;
+    /* Añade un subrayado al pasar el mouse para indicar interactividad */
+}

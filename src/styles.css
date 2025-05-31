@@ -1,37 +1,144 @@
 /* You can add global styles to this file, and also import other style files */
-.label-filtro{
-    margin-bottom: 5px;
-    font-family: Quicksand;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 20px;
-    text-align: left;
-    width: 90%;
-  }
 
-  .filtro-input {
-    height: 32px;
-    font-size: 14px;
-    border-radius: 6px;
-    border: 1px solid #DADADACC;
-    background-color: #FFFFFF;
-    color: #6E6C6D;
-    padding-left: 8px;
-    appearance: none;
-    -webkit-appearance: none; 
-    -moz-appearance: none; 
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-    background-size: 10px;
-  }
+@import 'leaflet/dist/leaflet.css';
 
-  .filtro-input:focus{
-    border-color: #F2910C; 
-              background-color: #ffffff; 
-              color: #333; 
-              outline: none;
-  }
-  .filtro-input:hover {
-    border-color: #F2910C;
-    background-color: #ffffff;
-  }
+.label-filtro {
+  margin-bottom: 5px;
+  font-family: Quicksand;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 20px;
+  text-align: left;
+  width: 90%;
+}
+
+.filtro-input-busqueda {
+  height: 35px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #DADADACC;
+  background-color: #FFFFFF;
+  color: #6E6C6D;
+  padding-left: 8px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+}
+
+.filtro-input {
+  height: 32px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #DADADACC;
+  background-color: #FFFFFF;
+  color: #6E6C6D;
+  padding-left: 8px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+}
+
+.ng-filtro-input {
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #DADADACC;
+  background-color: #FFFFFF;
+  min-height: 32px;
+  height: auto !important;
+  color: #6E6C6D;
+  padding-left: 8px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 10px;
+}
+
+.filtro-input:focus {
+  border-color: #F2910C;
+  background-color: #ffffff;
+  color: #333;
+  outline: none;
+}
+
+.filtro-input:hover {
+  border-color: #F2910C;
+  background-color: #ffffff;
+}
+
+.ng-filtro-input:focus {
+  border-color: #F2910C;
+  background-color: #ffffff;
+  color: #333;
+  outline: none;
+}
+
+.ng-filtro-input:hover {
+  border-color: #F2910C;
+  background-color: #ffffff;
+}
+
+.ng-select .ng-value-container .ng-value {
+  font-size: 14px;
+  border: 1px solid #6E6C6D;
+  border-radius: 5px;
+  padding: 1px 3px;
+  margin-right: 5px;
+  color: #6E6C6D;
+  background-color: #e9ecef;
+}
+
+.ng-select .ng-value-container .ng-value .ng-value-icon {
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+  padding: 0 3px;
+}
+
+.ng-select .ng-value-container .ng-value .ng-value-icon:hover {
+  opacity: 0.8;
+}
+
+.ng-dropdown-panel {
+  background-color: white !important;
+  color: #333;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Si las opciones individuales también tienen fondo transparente */
+.ng-dropdown-panel .ng-dropdown-items .ng-option {
+  background-color: white;
+  /* Asegura que las opciones también tengan fondo blanco */
+  color: #333;
+}
+
+/* Estilo para la opción activa (hover o seleccionada) - opcional */
+.ng-dropdown-panel .ng-dropdown-items .ng-option.ng-option-marked {
+  background-color: #f0f0f0;
+  /* Un gris claro para la opción marcada */
+}
+
+.ng-dropdown-panel .ng-dropdown-items .ng-option.ng-option-selected {
+  background-color: #007bff;
+  /* Un azul para la opción seleccionada */
+  color: white;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}

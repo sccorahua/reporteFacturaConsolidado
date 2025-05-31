@@ -3,6 +3,7 @@ import { FilaConsolidado } from '../../../models/fila-consolidado';
 import { CommonModule, CurrencyPipe, DatePipe } from '@angular/common';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { ExcelDataService } from '../../../service/excel-data.service';
 
 @Component({
   selector: 'app-grid-oc-pendiente',
@@ -17,13 +18,12 @@ import { NgbModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './grid-oc-pendiente.component.html',
   styleUrl: './grid-oc-pendiente.component.css'
 })
-export class GridOcPendienteComponent implements OnChanges {
-  @Input() reporteConsolidadoDeuda: FilaConsolidado[] = [];
-  @Output() retrocederOpcionReporte = new EventEmitter<void>();
+export class GridOcPendienteComponent {
   @ViewChild('modalDetalles') modalDetalles: any;
 
   detalleFila!: FilaConsolidado;
 
+  reporteConsolidadoDeuda: FilaConsolidado[] = [];
   reporteConsolidadoDeudaGrid: FilaConsolidado[] = [];
 
   filtroSupervisor = new FormControl<string>('null');
@@ -38,20 +38,21 @@ export class GridOcPendienteComponent implements OnChanges {
   montoSinIGV: number = 0;
   cantidadRegistros: number = 0;
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['reporteConsolidadoDeuda'] && this.reporteConsolidadoDeuda?.length > 0) {
-      this.reporteConsolidadoDeudaGrid = this.reporteConsolidadoDeuda;
-      this.cargarFltros();
-      this.actualizarCabecera();
-    }
-  }
-
   constructor(
     private modalService: NgbModal,
+    private excelDataService: ExcelDataService,
   ) {
   }
 
   ngOnInit() {
+    this.consumirDatos();
+    this.cargarFltros();
+    this.actualizarCabecera();
+  }
+
+  consumirDatos(){
+    this.reporteConsolidadoDeuda = this.excelDataService.getExcelDataPendiente();
+    this.reporteConsolidadoDeudaGrid = this.reporteConsolidadoDeuda;   
   }
 
   filtrarReporte() {
@@ -97,10 +98,6 @@ export class GridOcPendienteComponent implements OnChanges {
   verDetalles(fila: FilaConsolidado) {
     this.detalleFila = fila;
     this.modalService.open(this.modalDetalles, { size: 'lg' });
-  }
-
-  retroceder(){
-    this.retrocederOpcionReporte.emit();
   }
 
 }
