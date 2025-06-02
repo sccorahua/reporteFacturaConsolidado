@@ -80,12 +80,17 @@ export class CargarArchivoExcelComponent {
     this.excelData.forEach(item => {
       const fechaEnvio = item['F_ENVIO_PSTO'];
       const descripcionServicio = item['DESCRIPCION_DEL_SERVICIO'];
+      const ciudad = item['CIUDAD'];
 
       if (fechaEnvio === null || fechaEnvio === undefined || fechaEnvio === '') {
         return;
       }
 
       if (descripcionServicio === null || descripcionServicio === undefined || descripcionServicio === '') {
+        return;
+      }
+
+      if (ciudad === null || ciudad === undefined || ciudad === '') {
         return;
       }
 
@@ -103,7 +108,7 @@ export class CargarArchivoExcelComponent {
         Descripcion: descripcionServicio, //item['DESCRIPCION_DEL_SERVICIO'],
         HorasAlquiladas: item['HORAS_ALQUILADAS'],
         Supervisor: item['SUPERVISOR'],
-        Ciudad: item['CIUDAD'],
+        Ciudad: ciudad, //si no tiene ciudad no se considera en el calculo
         Monto: item['MONTO'],
         MontoIGV: item['MONTO_INC_IGV'],
         EstadoOrdenCompra: item['ESTADO_O/C'],
