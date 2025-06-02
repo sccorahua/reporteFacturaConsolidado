@@ -26,7 +26,6 @@ import { VentasPorServicioChartComponent } from '../componentes/ventas-por-servi
 })
 export class GraphFacturadoComponent implements OnInit {
   map: any;
-  L: any;
 
   excelData: FilaConsolidado[] = [];
   ventasCiudades: VentaPorCiudad[] = [];
@@ -43,33 +42,34 @@ export class GraphFacturadoComponent implements OnInit {
   async ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
       const L = await import('leaflet');
-      this.L = L;
 
-      this.L.Icon.Default.mergeOptions({
+      L.Marker.prototype.options.icon = L.icon({
         iconRetinaUrl: 'marker-icon-2x.png',
         iconUrl: 'marker-icon.png',
         shadowUrl: 'marker-shadow.png',
+        iconSize: [25, 41], 
+        iconAnchor: [12, 41], 
+        popupAnchor: [1, -34], 
+        shadowSize: [41, 41] 
       });
-
-      this.initMap();
-      await this.procesarExcelData();
-      this.addSalesMarkers();
+      this.initMap(L);
+      this.addSalesMarkers(L);
     }
   }
 
-  private initMap(): void {
-    this.map = this.L.map('mapaVentas', {
+  private initMap(L: any): void {
+    this.map = L.map('mapaVentas', { // Usa L directamente
       center: [-10, -75],
       zoom: 6
     });
 
-    this.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { // Usa L directamente
       maxZoom: 18,
       attribution: '...'
     }).addTo(this.map);
   }
 
-  private addSalesMarkers(): void {
+  private addSalesMarkers(L: any): void {
     this.ventasCiudades.forEach(venta => {
       const ciudad = venta.Ciudad;
       const volumenVentas = venta.VolumenVentas;
@@ -78,14 +78,13 @@ export class GraphFacturadoComponent implements OnInit {
 
       if (latitude !== null && longitude !== null) {
         const coordenadas: L.LatLngExpression = [latitude, longitude];
-        const marker = this.L.marker(coordenadas).bindPopup(`Ciudad: ${ciudad}<br>Ventas: S/ ${volumenVentas.toLocaleString()}`);
+        const marker = L.marker(coordenadas).bindPopup(`Ciudad: ${ciudad}<br>Ventas: S/ ${volumenVentas.toLocaleString()}`); // Usa L directamente
         marker.addTo(this.map);
       } else {
         console.warn(`Coordenadas no encontradas para: ${ciudad}`);
       }
     });
   }
-
   async procesarExcelData() {
     this.excelData = this.excelDataService.getExcelDataFacturado();
 
