@@ -57,7 +57,7 @@
                         <div class="card text-center shadow-sm border-success">
                             <div class="card-body">
                                 <h5 class="card-title text-success">
-                                    {{ montoConIGV | currency:'S/.':'symbol':'1.2-2' }}
+                                    {{ montoConIGV | currency:'PEN':'symbol':'1.2-2' }}
                                 </h5>
                                 <p class="card-text">Monto con IGV</p>
                             </div>
@@ -67,7 +67,7 @@
                         <div class="card text-center shadow-sm border-info">
                             <div class="card-body">
                                 <h5 class="card-title text-info">
-                                    {{ montoSinIGV | currency:'S/.':'symbol':'1.2-2' }}
+                                    {{ montoSinIGV | currency:'PEN':'symbol':'1.2-2' }}
                                 </h5>
                                 <p class="card-text">Monto sin IGV</p>
                             </div>
@@ -117,7 +117,7 @@
                             </td>
                             <td class="text-center" style="width: 100px;">{{ fila.Supervisor }}</td>
                             <td class="text-center" style="width: 80px;">{{ fila.MontoIGV |
-                                currency:'S/.':'symbol-narrow' }}</td>
+                                currency:'PEN':'symbol-narrow' }}</td>
                             <td class="text-center" style="width: 50px;">
                                 <button (click)="verDetalles(fila)" style="border: none; background: none;">
                                     <i class="bi bi-eye-fill text-primary"></i>

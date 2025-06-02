@@ -127,7 +127,7 @@ export class VentasPorSupervisorChartComponent {
                         label += ': ';
                     }
                     if (context.parsed !== null) {
-                        label += new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'S/.' }).format(context.parsed);
+                        label += new Intl.NumberFormat('es-PE', { style: 'currency', currency: 'PEN' }).format(context.parsed);
                     }
                     return label;
                 },

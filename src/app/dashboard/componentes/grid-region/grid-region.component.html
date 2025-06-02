@@ -13,8 +13,8 @@
                 <tr *ngFor="let row of paginatedData">
                     <td style="font-size: 14px;"> <small> {{ row.CantidadRegistro }} </small> </td>
                     <td style="font-size: 14px;"> <small> {{ row.Ciudad }} </small> </td>
-                    <td style="font-size: 14px;"> <small> {{ row.MontoSinIGv | currency:'S/.':'symbol':'1.2-2' }} </small> </td>
-                    <td style="font-size: 14px;"> <small> {{ row.MontoConIGV | currency:'S/.':'symbol':'1.2-2' }} </small> </td>
+                    <td style="font-size: 14px;"> <small> {{ row.MontoSinIGv | currency:'PEN':'symbol':'1.2-2' }} </small> </td>
+                    <td style="font-size: 14px;"> <small> {{ row.MontoConIGV | currency:'PEN':'symbol':'1.2-2' }} </small> </td>
                 </tr>
             </tbody>
             <!--
