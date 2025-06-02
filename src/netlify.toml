@@ -1,0 +1,7 @@
+[[redirects]]
+from= "/https://nominatim.openstreetmap.org/:splat 200"
+to = "/nominatim/*"
+
+[[redirects]]
+from= "/index.html 200"
+to = "/*"
