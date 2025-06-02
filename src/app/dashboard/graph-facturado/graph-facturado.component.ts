@@ -9,6 +9,7 @@ import { EstadosOcChartComponent } from '../componentes/estados-oc-chart/estados
 import { GridRegionComponent } from '../componentes/grid-region/grid-region.component';
 import { VentasPorSupervisorChartComponent } from '../componentes/ventas-por-supervisor-chart/ventas-por-supervisor-chart.component';
 import { VentasPorServicioChartComponent } from '../componentes/ventas-por-servicio-chart/ventas-por-servicio-chart.component';
+import * as L from 'leaflet';
 
 @Component({
   selector: 'app-graph-facturado',
@@ -26,6 +27,7 @@ import { VentasPorServicioChartComponent } from '../componentes/ventas-por-servi
 })
 export class GraphFacturadoComponent implements OnInit {
   map: any;
+  L: any;
 
   excelData: FilaConsolidado[] = [];
   ventasCiudades: VentaPorCiudad[] = [];
@@ -39,31 +41,33 @@ export class GraphFacturadoComponent implements OnInit {
     this.procesarExcelData();
   }
 
-  async ngAfterViewInit() {
+   async ngAfterViewInit() {
     if (isPlatformBrowser(this.platformId)) {
-      const L = await import('leaflet');
-
-      L.Marker.prototype.options.icon = L.icon({
-        iconRetinaUrl: 'marker-icon-2x.png',
-        iconUrl: 'marker-icon.png',
-        shadowUrl: 'marker-shadow.png',
-        iconSize: [25, 41], 
-        iconAnchor: [12, 41], 
-        popupAnchor: [1, -34], 
-        shadowSize: [41, 41] 
-      });
-      this.initMap(L);
-      this.addSalesMarkers(L);
+      (L.Icon.Default.prototype as any)._getIconUrl = function (name: string): string {
+        switch (name) {
+          case 'marker-icon':
+            return 'marker-icon.png';
+          case 'marker-icon-2x':
+            return 'marker-icon-2x.png';
+          case 'marker-shadow':
+            return 'marker-shadow.png';
+          default:
+            return `${name}.png`;
+        }
+      };
+      this.initMap(L); // Pasa L a initMap si lo obtuviste dinámicamente
+      this.addSalesMarkers(L); // Pasa L a addSalesMarkers si lo obtuviste dinámicamente
     }
   }
 
+
   private initMap(L: any): void {
-    this.map = L.map('mapaVentas', { // Usa L directamente
+    this.map = L.map('mapaVentas', {
       center: [-10, -75],
       zoom: 6
     });
 
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { // Usa L directamente
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18,
       attribution: '...'
     }).addTo(this.map);
@@ -78,13 +82,14 @@ export class GraphFacturadoComponent implements OnInit {
 
       if (latitude !== null && longitude !== null) {
         const coordenadas: L.LatLngExpression = [latitude, longitude];
-        const marker = L.marker(coordenadas).bindPopup(`Ciudad: ${ciudad}<br>Ventas: S/ ${volumenVentas.toLocaleString()}`); // Usa L directamente
+        const marker = L.marker(coordenadas).bindPopup(`Ciudad: ${ciudad}<br>Ventas: S/ ${volumenVentas.toLocaleString()}`);
         marker.addTo(this.map);
       } else {
         console.warn(`Coordenadas no encontradas para: ${ciudad}`);
       }
     });
   }
+
   async procesarExcelData() {
     this.excelData = this.excelDataService.getExcelDataFacturado();
 
